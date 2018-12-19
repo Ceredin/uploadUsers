@@ -1,12 +1,14 @@
 <?php
 
-#$host = "localhost"; //default host if not specified.
-#$username = "root"; //default username
-#$password = "pass"; //default password
-#$db_name = "users"; 
+$host = "localhost"; //default host if not specified.
+$username = "root"; //default username
+$password = "pass"; //default password
+$db_name = "users"; 
 
-#$conn = mysqli_connect("$host", "$username", "$password", "$db_name") or die ("Not able to connect!");
-#mysqli_select_db("$db_name");
+$conn = mysqli_connect("$host", "$username", "$password", "$db_name") or die ("Not able to connect!");
+mysqli_select_db("$db_name");
+
+$isDryRun = true; //default is dryRun
 
 $shortopts ="u:p:h:";
 $longopts = array(
@@ -35,6 +37,7 @@ if(array_key_exists("file", $options)){
 }
 if(array_key_exists("create_table", $options)){
     if(isset($file) && $file != false){
+        $isDryRun = false; //no longer dryRun
         create();
     }else{
         
@@ -107,7 +110,6 @@ function dryRun($file){
         }else {
             print "File unable to be opened.";
         }
-
 }
 
 
@@ -119,6 +121,12 @@ function create(){
         surname VARCHAR(30) NOT NULL,
         mail VARCHAR(50) PRIMARY KEY
         )";
+
+    if ($conn->query($sql) === true){
+        print "Table of users created. \n";
+    }else{
+        print "Not able to create table. \n";
+    }
 
 }
 
@@ -147,4 +155,5 @@ function help(){
     ");
 }
 
+$conn->close();
 ?>
