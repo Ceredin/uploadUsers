@@ -52,25 +52,46 @@ function openFile($file){
         if (($myfile = fopen($file, "r")) !== false) {
             
             $row = 1;
+            $rowcontent = "";
             //put all of the contents in csv file into one array
             while (($data = fgetcsv($myfile, 1000, ",")) !== FALSE) {
                 $num = count($data);
-                //echo "$num fields in line $row: \n";
                 $row++;
+                if (($row-1) == 1){
+                    //print "row 1!! \n \n";
+                    continue;
+                }
                 for ($col=0; $col < $num; $col++) {
-                    //echo $data[$col] . "\n";
                     //this is where the validation happens!!
                     if($col < 2){
                         //so this is either a first or last name
                         $name = strtolower($data[$col]);
-                        print(ucfirst($name) . " ");
+                        $rowcontent .= trim(ucfirst($name));
+                        //print $rowcontent . " ";
                     }else{
                         //this should be the email which is the unique key
-                        $email = strtolower($data[$col]);
+                        $email = strtolower($data[$col]); //lowercased now
                         
-
+                        $emailcount = count_chars($email,1);
+                        //print_r($emailcount);
+                        if(array_key_exists('64',$emailcount)){
+                            //firstly @ has to exist to be valid email... 64 is the ascii for @
+                            if($emailcount[64] == 1 ){
+                                $rowcontent .= " " . $email;
+                            }else{
+                                $rowcontent = "";
+                            }
+                        }else{
+                            //this is not a valid email without @
+                            $rowcontent = "";
+                            print "Invalid Email Address! \n";
+                        }
                     }
                 }
+                print $rowcontent . "\n";
+                    //write to database
+                    //empty rowcontent
+                    $rowcontent = "";
             }
 
             fclose($myfile);
