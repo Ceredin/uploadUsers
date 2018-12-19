@@ -27,14 +27,14 @@ if(array_key_exists("file", $options)){
 }
 if(array_key_exists("create_table", $options)){
     if(isset($file) && $file != false){
-        openFile($file);
+        create();
     }else{
         
     }
 }
 if(array_key_exists("dry_run", $options)){
     if(isset($file) && $file != false){
-        dryRun();
+        dryRun($file);
     }
 }
 
@@ -47,7 +47,7 @@ if(array_key_exists("help", $options)){
 
 
 
-function openFile($file){
+function dryRun($file){
     //opens csv file takes all the content and puts them into a variable and validates it
         if (($myfile = fopen($file, "r")) !== false) {
             
@@ -70,6 +70,7 @@ function openFile($file){
                         //print $rowcontent . " ";
                     }else{
                         //this should be the email which is the unique key
+                        //assumption: MySQL table will handle multiple identical entries of email
                         $email = strtolower($data[$col]); //lowercased now
                         
                         $emailcount = count_chars($email,1);
@@ -101,9 +102,6 @@ function openFile($file){
 
 }
 
-function dryRun(){
-    //when --dry_run is inputted
-}
 
 function create(){
     //when --create_table is inputted
