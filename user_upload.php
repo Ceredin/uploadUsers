@@ -1,5 +1,13 @@
 <?php
 
+#$host = "localhost"; //default host if not specified.
+#$username = "root"; //default username
+#$password = "pass"; //default password
+#$db_name = "users"; 
+
+#$conn = mysqli_connect("$host", "$username", "$password", "$db_name") or die ("Not able to connect!");
+#mysqli_select_db("$db_name");
+
 $shortopts ="u:p:h:";
 $longopts = array(
     "file:",
@@ -89,10 +97,10 @@ function dryRun($file){
                         }
                     }
                 }
-                print $rowcontent . "\n";
-                    //write to database
-                    //empty rowcontent
-                    $rowcontent = "";
+                //print $rowcontent . "\n";
+                //figure out if this is dry run only or not.
+                //if not, then send this data to be written to DB
+                $rowcontent = "";
             }
 
             fclose($myfile);
@@ -105,6 +113,12 @@ function dryRun($file){
 
 function create(){
     //when --create_table is inputted
+
+    $sql = "CREATE TABLE Users(
+        fname VARCHAR(30) NOT NULL,
+        surname VARCHAR(30) NOT NULL,
+        mail VARCHAR(50) PRIMARY KEY
+        )";
 
 }
 
