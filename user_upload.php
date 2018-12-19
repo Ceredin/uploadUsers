@@ -1,7 +1,16 @@
 <?php
 
-$myfile = fopen("users.csv", "r") or die("Unable to open this file!");
+if (($myfile = fopen("users.csv", "r")) !== FALSE) {
+    //a less dramatic way of handling the error than die()
 
-fclose($myfile);
+
+    
+
+    fclose($myfile);
+}else {
+    print ("File unable to be opened.");
+}
+
+
 
 ?>
