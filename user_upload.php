@@ -1,8 +1,8 @@
 <?php
 
 $host = "localhost"; //default host if not specified.
-$username = "root"; //default username
-$password = "pass"; //default password
+$username = "user"; //default username
+$password = "password"; //default password
 $db_name = "users"; 
 
 $conn = mysqli_connect("$host", "$username", "$password", "$db_name") or die ("Not able to connect!");
