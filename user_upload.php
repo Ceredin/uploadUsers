@@ -13,12 +13,10 @@ $options = getopt($shortopts, $longopts);
 if(array_key_exists("u", $options)){
     //what comes next is the MySQL username
     $username = $options["u"];
-
 }
 if(array_key_exists("p", $options)){
     //what comes next is the MySQL password
     $password = $options["p"];
- 
 }
 if(array_key_exists("h", $options)){
     //what comes next is the MySQL host
@@ -28,12 +26,14 @@ if(array_key_exists("file", $options)){
     $file = $options["file"];
 }
 if(array_key_exists("create_table", $options)){
-    if($file != false){
-        create();
+    if(isset($file) && $file != false){
+        openFile($file);
+    }else{
+        
     }
 }
 if(array_key_exists("dry_run", $options)){
-    if($file != false){
+    if(isset($file) && $file != false){
         dryRun();
     }
 }
@@ -48,12 +48,34 @@ if(array_key_exists("help", $options)){
 
 
 function openFile($file){
-    //when input is --file followed by the argument
+    //opens csv file takes all the content and puts them into a variable and validates it
         if (($myfile = fopen($file, "r")) !== false) {
             
+            $row = 1;
+            //put all of the contents in csv file into one array
+            while (($data = fgetcsv($myfile, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                //echo "$num fields in line $row: \n";
+                $row++;
+                for ($col=0; $col < $num; $col++) {
+                    //echo $data[$col] . "\n";
+                    //this is where the validation happens!!
+                    if($col < 2){
+                        //so this is either a first or last name
+                        $name = strtolower($data[$col]);
+                        print(ucfirst($name) . " ");
+                    }else{
+                        //this should be the email which is the unique key
+                        $email = strtolower($data[$col]);
+                        
+
+                    }
+                }
+            }
+
             fclose($myfile);
         }else {
-            print ("File unable to be opened.");
+            print "File unable to be opened.";
         }
 
 }
