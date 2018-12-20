@@ -1,6 +1,9 @@
 <?php
 
-//ASSUMPTION: the directive --file [csv name] will also parse through the csv if the table has already been created
+//ASSUMPTION: the directive --file [csv name] will also parse through the csv, if the table has already been created.
+//ASSUMPTION: the MySQL table will handle any duplicate unique key entries
+//Pseudo code has been commented out.
+//This program works up until all the MySQL parts.. so you can comment them out to get it to run on command line
 
 $host = "localhost"; //default host if not specified.
 $username = "user"; //default username
