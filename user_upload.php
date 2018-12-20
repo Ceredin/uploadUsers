@@ -1,5 +1,7 @@
 <?php
 
+//ASSUMPTION: the directive --file [csv name] will also parse through the csv if the table has already been created
+
 $host = "localhost"; //default host if not specified.
 $username = "user"; //default username
 $password = "password"; //default password
@@ -9,6 +11,7 @@ $conn = mysqli_connect("$host", "$username", "$password", "$db_name") or die ("N
 mysqli_select_db("$db_name");
 
 $isDryRun = true; //default is dryRun
+//$tableExists = false; //so I can tell if the table is created or not
 
 $shortopts ="u:p:h:";
 $longopts = array(
@@ -33,15 +36,20 @@ if(array_key_exists("h", $options)){
     $host = $options["h"];
 }
 if(array_key_exists("file", $options)){
-    $file = $options["file"];
+    $file = $options["file"];//saves the name of the file
+    //check if table is created
+    /*if($tableExists == true){
+    // set the boolean to show it isn't dry run
+    $isDryRun = false;
+    //then do as if we are doing a dry run.
+        if(isset($file) && $file != false){
+        dryRun($file);
+    }
+    */}
 }
 if(array_key_exists("create_table", $options)){
-    if(isset($file) && $file != false){
-        $isDryRun = false; //no longer dryRun
-        create();
-    }else{
-        
-    }
+    //just creates the table    
+    create();
 }
 if(array_key_exists("dry_run", $options)){
     if(isset($file) && $file != false){
@@ -101,9 +109,18 @@ function dryRun($file){
                     }
                 }
                 //print $rowcontent . "\n";
-                //figure out if this is dry run only or not.
+                //figure out if this is dry run or not.
                 //if not, then send this data to be written to DB
-                $rowcontent = "";
+                /*
+                if (global $isDryRun == false){
+                    //so this isn't a dry run. which means we send this to the db
+                    $sql = "INSERT INTO users () VALUES ()";
+                    $send = mysqli_query($sql, $conn);
+                }else{
+                */
+                $rowcontent = ""; //clear the rowcontent
+                //}
+
             }
 
             fclose($myfile);
@@ -113,8 +130,11 @@ function dryRun($file){
 }
 
 
+
 function create(){
     //when --create_table is inputted
+    //it JUST creates the table
+    //then triggers that the table has been created
 
     $sql = "CREATE TABLE Users(
         fname VARCHAR(30) NOT NULL,
@@ -124,6 +144,7 @@ function create(){
 
     if ($conn->query($sql) === true){
         print "Table of users created. \n";
+        //global $tableExists = true;
     }else{
         print "Not able to create table. \n";
     }
